@@ -4,6 +4,9 @@ const jwt = require('jsonwebtoken');
 
 exports.buscarDados = async (req, res) => {
   try {
+
+    console.log("ID do usuário autenticado:", req.userId); 
+    
     const userId = req.usuarioId;  // do middleware
     const usuario = await Usuario.findById(userId).select('-senhaHash'); // remove senhaHash
     if (!usuario) return res.status(404).json({ mensagem: "Usuário não encontrado" });
