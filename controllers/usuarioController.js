@@ -2,6 +2,45 @@ const Usuario = require('../models/Usuario');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+exports.atualizar = async (req, res) => {
+  try {
+    const userId = req.userId; // Pega do middleware de autenticação (token)
+    const { nome, email, senha } = req.body;
+
+    const updateData = { nome, email };
+
+    if (senha) {
+      updateData.senhaHash = bcrypt.hashSync(senha, 10);
+    }
+
+    const usuarioAtualizado = await Usuario.findByIdAndUpdate(userId, updateData, { new: true });
+
+    if (!usuarioAtualizado) {
+      return res.status(404).json({ mensagem: "Usuário não encontrado" });
+    }
+
+    res.status(200).json({ mensagem: "Usuário atualizado com sucesso" });
+  } catch (err) {
+    res.status(500).json({ mensagem: err.message });
+  }
+};
+
+exports.deletar = async (req, res) => {
+  try {
+    const userId = req.userId; // Pega do middleware de autenticação
+
+    const usuarioDeletado = await Usuario.findByIdAndDelete(userId);
+
+    if (!usuarioDeletado) {
+      return res.status(404).json({ mensagem: "Usuário não encontrado" });
+    }
+
+    res.status(200).json({ mensagem: "Usuário deletado com sucesso" });
+  } catch (err) {
+    res.status(500).json({ mensagem: err.message });
+  }
+};
+
 exports.registrar = async (req, res) => {
   const { nome, email, senha } = req.body;
   const senhaHash = bcrypt.hashSync(senha, 10);
