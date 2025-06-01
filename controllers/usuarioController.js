@@ -15,7 +15,7 @@ exports.buscarDados = async (req, res) => {
 
 exports.atualizar = async (req, res) => {
   try {
-    const userId = req.userId; // Pega do middleware de autenticação (token)
+    const userId = req.usuarioId; // Pega do middleware de autenticação (token)
     const { nome, email, senha } = req.body;
 
     const updateData = { nome, email };
@@ -38,7 +38,7 @@ exports.atualizar = async (req, res) => {
 
 exports.deletar = async (req, res) => {
   try {
-    const userId = req.userId; // Pega do middleware de autenticação
+    const userId = req.usuarioId; // Pega do middleware de autenticação
 
     const usuarioDeletado = await Usuario.findByIdAndDelete(userId);
 
