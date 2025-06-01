@@ -2,6 +2,17 @@ const Usuario = require('../models/Usuario');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+exports.buscarDados = async (req, res) => {
+  try {
+    const userId = req.usuarioId;  // do middleware
+    const usuario = await Usuario.findById(userId).select('-senhaHash'); // remove senhaHash
+    if (!usuario) return res.status(404).json({ mensagem: "Usuário não encontrado" });
+    res.status(200).json(usuario);
+  } catch (err) {
+    res.status(500).json({ mensagem: err.message });
+  }
+};
+
 exports.atualizar = async (req, res) => {
   try {
     const userId = req.userId; // Pega do middleware de autenticação (token)
